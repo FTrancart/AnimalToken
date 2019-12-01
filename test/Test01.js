@@ -13,7 +13,7 @@ contract('Creating dog contract', accounts => {
         await erc.approve(dog.address, 1, {from: accounts[0]})
         await dog.deposit(1, accounts[0], {from: accounts[1]})
 
-        await erc.approve(dog.address,2, {from: accounts[0]})
+        await erc.approve(dog.address, 2, {from: accounts[0]})
         await dog.deposit(2, accounts[0], {from: accounts[2]})
     })
 
@@ -68,7 +68,7 @@ contract('Creating dog contract', accounts => {
         await dog.findFight(2, {from: accounts[2]})
 
         survivor = await dog.fight(1, 2, 700, {from: accounts[1]})
-        
+
     })
 
     it('test the breed function', async function() {
@@ -78,10 +78,10 @@ contract('Creating dog contract', accounts => {
         await dog.wantsToBreed(1, {from: accounts[1]})
         await dog.wantsToBreed(2, {from: accounts[2]})
 
-        await dog.breed(1, 2, accounts[3], {from: accounts[1]})
+        await dog.breed(1, 2, accounts[1], {from: accounts[1]})
 
-        res = await dog.listAnimals(6)
-        assert.equal(res.owner, accounts[3])
+        res = await dog.listAnimals(5)
+        assert.equal(res.owner, accounts[1])
     })
 })
 

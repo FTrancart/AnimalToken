@@ -78,6 +78,7 @@ contract DogToken {
         return true;
     }
 
+
     function withdrawal(uint256 tokenA, uint256 tokenB) public onlyOneOfOwners(listAnimals[tokenA].owner, listAnimals[tokenB].owner) {
         delete listAnimals[tokenA];
         ercContract.burn(tokenA);
@@ -126,14 +127,16 @@ contract DogToken {
     }
 
     function breed(uint256 tokenA, uint256 tokenB, address newOwner) public onlyBreeder() onlyOneOfOwners(listAnimals[tokenA].owner, listAnimals[tokenB].owner) {
-     require(listAnimals[tokenA].breed == true && listAnimals[tokenB].breed == true, "both owners do not agree to breed");
-     uint256 newId = ercContract.mintNew(tokenA, tokenB);
-     require(deposit(newId, newOwner) == true, "problem in ERC721 deposit");
-     listAnimals[tokenA].breed = false;
-     listAnimals[tokenB].breed = false;
- }
-
- function createAuction(uint256 tokenId, uint startPrice, uint256 nbDays) public onlyOwner(listAnimals[tokenId].owner) {
+       require(listAnimals[tokenA].breed == true && listAnimals[tokenB].breed == true, "both owners do not agree to breed");
+       uint256 newId = ercContract.mintNew(tokenA, tokenB);
+       
+       require(listAnimals[newId].owner == address(0), "token already exists");
+       listAnimals[newId] = Animal(newOwner, false, false, 0);
+       listAnimals[tokenA].breed = false;
+       listAnimals[tokenB].breed = false;
+   }
+   
+   function createAuction(uint256 tokenId, uint startPrice, uint256 nbDays) public onlyOwner(listAnimals[tokenId].owner) {
     listAuctions[nbAuctions] = Auction(true, tokenId, startPrice, nbDays * 1 days, now, msg.sender, address(0));
     nbAuctions++;
 }
